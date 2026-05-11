@@ -644,6 +644,9 @@ button:active{
 }
 
 </style>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+
 </head>
 <body>
 
@@ -996,6 +999,8 @@ function saveMemo(){
 
   }
 
+  saveToLocal(); 
+
   renderCards();
 
   closeModal();
@@ -1328,7 +1333,40 @@ function renderCharacters(){
 
 }
 
+
+
+
+const SUPABASE_URL = "https://dtgpatsnshbqmpvacunq.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR0Z3BhdHNuc2hicW1wdmFjdW5xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg1MjU4NzQsImV4cCI6MjA5NDEwMTg3NH0.qA-qkZ2GeklQ16w66d0KpxSAcSmgNStu7Z47VeSl9xw";
+
+const client = supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_ANON_KEY
+);
+
+async function loadFromSupabase() {
+  const { data, error } = await client
+    .from("cards")
+    .select("*");
+
+  if (error) {
+    console.error(error);
+    return;
+  }
+
+  cards = data || [];
+}
+
 renderCharacters();
+
+
+init();
+
+async function init() {
+
+  await loadFromSupabase();
+  renderCards();
+}
 
 </script>
 
